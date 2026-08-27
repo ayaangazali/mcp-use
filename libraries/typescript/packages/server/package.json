@@ -61,6 +61,10 @@
       "types": "./dist/oauth/clerk.d.ts",
       "import": "./dist/oauth/clerk.js"
     },
+    "./oauth/convex": {
+      "types": "./dist/oauth/convex.d.ts",
+      "import": "./dist/oauth/convex.js"
+    },
     "./oauth/auth0": {
       "types": "./dist/oauth/auth0.d.ts",
       "import": "./dist/oauth/auth0.js"

@@ -27,6 +27,7 @@ export default defineConfig([
       // and declarations stay aligned with package.json's exports map.
       "oauth/index": "src/oauth/index.ts",
       "oauth/clerk": "src/oauth/clerk.ts",
+      "oauth/convex": "src/oauth/convex.ts",
       "oauth/auth0": "src/oauth/auth0.ts",
       "oauth/workos": "src/oauth/workos.ts",
       "oauth/supabase": "src/oauth/supabase.ts",

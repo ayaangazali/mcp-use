@@ -538,4 +538,43 @@ describe("useMcp connection metadata", () => {
       vi.useRealTimers();
     }
   });
+
+  it("drops the previous server's state when the connection is disabled", async () => {
+    connect.mockResolvedValue(connectionFor("modern"));
+    const { useMcp } = await import("../../../src/react/useMcp.js");
+    let result: ReturnType<typeof useMcp> | undefined;
+    function TestComponent({ enabled }: { enabled: boolean }) {
+      result = useMcp({
+        url: "https://example.com/mcp",
+        authProvider,
+        autoProxyFallback: false,
+        autoReconnect: false,
+        logLevel: "silent",
+        enabled,
+      });
+      return null;
+    }
+
+    let renderer!: ReturnType<typeof create>;
+    await act(async () => {
+      renderer = create(<TestComponent enabled />);
+    });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(result!.state).toBe("ready");
+    expect(result!.tools).toHaveLength(1);
+
+    await act(async () => {
+      renderer.update(<TestComponent enabled={false} />);
+    });
+
+    expect(result!.state).toBe("discovering");
+    expect(result!.tools).toEqual([]);
+    expect(result!.serverInfo).toBeUndefined();
+    expect(result!.capabilities).toBeUndefined();
+    expect(result!.instructions).toBeUndefined();
+  });
 });

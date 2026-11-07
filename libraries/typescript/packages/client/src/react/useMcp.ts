@@ -597,6 +597,24 @@ export function useMcp(options: UseMcpInternalOptions): UseMcpResult {
     onAuthorizationRequired,
   });
 
+  const resetConnectionState = useCallback(() => {
+    setState("discovering");
+    setTools([]);
+    setResources([]);
+    setResourceTemplates([]);
+    setPrompts([]);
+    setSkills([]);
+    setError(undefined);
+    setAuthUrl(undefined);
+    setAuthTokens(undefined);
+    setServerInfo(undefined);
+    setCapabilities(undefined);
+    setProtocolEra(undefined);
+    setProtocolVersion(undefined);
+    setInstructions(undefined);
+    setExtensions({});
+  }, []);
+
   /**
    * Disconnect from the MCP server and clean up resources
    * @param quiet - If true, suppresses log messages
@@ -644,24 +662,10 @@ export function useMcp(options: UseMcpInternalOptions): UseMcpResult {
       }
 
       if (isMountedRef.current && !quiet && !supersededByNewerConnect) {
-        setState("discovering");
-        setTools([]);
-        setResources([]);
-        setResourceTemplates([]);
-        setPrompts([]);
-        setSkills([]);
-        setError(undefined);
-        setAuthUrl(undefined);
-        setAuthTokens(undefined);
-        setServerInfo(undefined);
-        setCapabilities(undefined);
-        setProtocolEra(undefined);
-        setProtocolVersion(undefined);
-        setInstructions(undefined);
-        setExtensions({});
+        resetConnectionState();
       }
     },
-    [addLog]
+    [addLog, resetConnectionState]
   );
 
   /**
@@ -2197,7 +2201,7 @@ export function useMcp(options: UseMcpInternalOptions): UseMcpResult {
           ? "No server URL provided, skipping connection."
           : "Connection disabled via enabled flag."
       );
-      setState("discovering");
+      resetConnectionState();
       return () => {
         isMountedRef.current = false;
       };
